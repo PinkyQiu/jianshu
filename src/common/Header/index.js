@@ -4,6 +4,7 @@ import { actionCreators } from './store'
 import { GlobalStyle } from '../../static/iconfont/iconfont.js'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 
 class Header extends Component {
@@ -45,7 +46,9 @@ class Header extends Component {
             <div>
                 <GlobalStyle></GlobalStyle>
                 <HeaderWrap>
-                    <Logo />
+                    <Link to='/'>
+                      <Logo />
+                    </Link>
                     <Nav>
                         <NavItem className='left active'>首页</NavItem>
                         <NavItem className='left'>下载App</NavItem>

@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { WriterWrap, SearchInfoTitle, SearchInfoSwitch, SearchList, SearchItem } from '../style'
 import { connect } from 'react-redux'
 import { actionCreators } from '../store'
 import { CSSTransition } from 'react-transition-group'
 
-class Writer extends Component {
+class Writer extends PureComponent {
   render() {
-    const { list, page, totalPage, handleChangeWriterPage } = this.props;
-    const newList = list.toJS();
+    const { writerList, page, totalPage, handleChangeWriterPage } = this.props;
+    const newList = writerList.toJS();
     const pageList = [];
     if(newList.length) {
       for (let i = (page - 1) * 5 ; i < page * 5; i++) {
           pageList.push(
-            <SearchItem key={newList[i].id}>
+            <SearchItem key={newList[i].index}>
               <img src={newList[i].img} alt="" className="img"/>
               <div className="attention">+关注</div>
               <div className="desc">
@@ -30,7 +30,7 @@ class Writer extends Component {
             <CSSTransition
               timeout ={200}
               classNames = 'slide'>
-              <SearchInfoSwitch onClick={ () => handleChangeWriterPage(page,totalPage,this.spinIcon,list) }>
+              <SearchInfoSwitch onClick={ () => handleChangeWriterPage(page,totalPage,this.spinIcon) }>
                 <span  ref={(icon => {this.spinIcon = icon})} className='iconfont spin'>&#xe851;</span>
                 换一批
               </SearchInfoSwitch>
@@ -43,18 +43,23 @@ class Writer extends Component {
       </div>
     );
   }
+  componentDidMount() {
+    const { page, totalPage, handleChangeWriterPage } = this.props;
+    handleChangeWriterPage(page,totalPage,this.spinIcon)
+  }
 }
 const mapStateToProps = (state) => {
   return {
-      list: state.getIn(['home','list']),
+      writerList: state.getIn(['home','writerList']),
       page: state.getIn(['home','page']),
       totalPage: state.getIn(['home','totalPage']),
   }
 }
 const mapDispathToProps = (dispatch) => {
   return {
-    handleChangeWriterPage(page, totalPage, spin, list) {
-      (list.size === 0) && dispatch(actionCreators.getList())
+    handleChangeWriterPage(page, totalPage, spin) {
+      // dispatch(actionCreators.changeList(writerList))
+      dispatch(actionCreators.getList())
       let originAngle = spin.style.transform.replace(/[^0-9]/ig, '');
       if(originAngle) {
           originAngle = parseInt(originAngle,10);
