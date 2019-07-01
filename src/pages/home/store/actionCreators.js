@@ -22,6 +22,8 @@ export const getHomeInfo = () => {
       const result = res.data.data;
       const action = chageHomeData(result)
       dispatch(action);
+    }).catch(() => {
+      console.log('error')
     })
   }
 }

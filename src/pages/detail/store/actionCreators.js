@@ -1,6 +1,5 @@
 import * as constants from './constants'
 import axios from 'axios'
-import { fromJS } from 'immutable';
 
 const chageDetail = (title,content) => ({
   type: constants.CHANGE_DETAIL,
@@ -14,6 +13,8 @@ export const getDetail = (id) => {
       const result = res.data.data;
       const action = chageDetail(result.title,result.content)
       dispatch(action);
+    }).catch(() => {
+      console.log('error')
     })
   }
 }

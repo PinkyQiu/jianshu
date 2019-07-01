@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HeaderWrap, Logo, Nav, NavItem, NavSerch, Addition, Button, SearchWrap, SearchList, SearchInfoItem, SearchInfoTitle, SearchInfo, SearchInfoSwitch} from './style';
 import { actionCreators } from './store'
+import { actionCreators as loginActionCreators } from '../../pages/login/store'
 import { GlobalStyle } from '../../static/iconfont/iconfont.js'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
@@ -41,7 +42,7 @@ class Header extends Component {
         }
     }
     render() {
-        const { focused, handleInputFocus, handleInputBlur, list } = this.props;
+        const { focused, handleInputFocus, handleInputBlur, list, login, logout } = this.props;
         return (
             <div>
                 <GlobalStyle></GlobalStyle>
@@ -55,7 +56,7 @@ class Header extends Component {
                         <NavItem className='right'>
                           <span className='iconfont'>&#xe636;</span>
                         </NavItem>
-                        <NavItem className='right'>登录</NavItem>
+                        { login ? <NavItem className='right' onClick={logout}>退出</NavItem> : <Link to='/login'><NavItem className='right'>登录</NavItem></Link>}
                         <SearchWrap>
                           <CSSTransition
                               in = {focused}
@@ -77,10 +78,12 @@ class Header extends Component {
                         </SearchWrap>
                     </Nav>
                     <Addition>
-                      <Button  className='writing'>
-                         <span className='iconfont'>&#xe615;</span>
-                         写文章
-                      </Button>
+                      <Link to='/write'>
+                        <Button  className='writing'>
+                            <span className='iconfont'>&#xe615;</span>
+                            写文章
+                        </Button>
+                      </Link>
                       <Button>注册</Button>
                     </Addition>
                 </HeaderWrap>
@@ -96,6 +99,7 @@ const mapStateToProps = (state) => {
         page: state.getIn(['header','page']),
         mouseIn: state.getIn(['header','mouseIn']),
         totalPage: state.getIn(['header','totalPage']),
+        login: state.getIn(['login','login'])
     }
 }
 const mapDispathToProps = (dispatch) => {
@@ -126,6 +130,9 @@ const mapDispathToProps = (dispatch) => {
             }else {
                 dispatch(actionCreators.changePage(1))
             }
+        },
+        logout() {
+            dispatch(loginActionCreators.logout())
         }
     }
 }
